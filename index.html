@@ -1,4 +1,4 @@
-<!doctype html> <html class="no-js"> <head> <meta charset="utf-8"> <title></title> <meta name="description" content=""> <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"> <link href="http://fonts.googleapis.com/css?family=Kotta+One|Niconne|Economica:400,700" rel="stylesheet" type="text/css"> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <link rel="stylesheet" href="styles/vendor.css"> <link rel="stylesheet" href="styles/main.css">  </head><body ng-app="roommateWorldApp"> <!--[if lt IE 7]>
+<!doctype html> <html class="no-js"> <head> <meta charset="utf-8"> <title>Roommate World</title> <meta name="description" content=""> <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"> <link href="http://fonts.googleapis.com/css?family=Kotta+One|Niconne|Economica:400,700" rel="stylesheet" type="text/css"> <!-- Place favicon.ico and apple-touch-icon.png in the root directory --> <link rel="stylesheet" href="styles/vendor.css"> <link rel="stylesheet" href="styles/main.css">  </head><body ng-app="roommateWorldApp"> <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
     your browser</a> to improve your experience.</p>
 <![endif]--> <!-- Add your site or application content here --> <div ui-view="" class="container"></div> <!-- Google Analytics: change UA-XXXXX-X to be your site's ID --> <script>(function (i, s, o, g, r, a, m) {
@@ -16,11 +16,11 @@
     ga('create', 'UA-XXXXX-X');
     ga('send', 'pageview');</script> <!--[if lt IE 9]>
 <script src="scripts/oldieshim.js"></script>
-<![endif]--> <script src="scripts/vendor.js"></script> <script src="scripts/scripts.js"></script> <!-- Cordova inclusion --> <script src="cordova.js"></script>  
+<![endif]--> <script src="scripts/vendor.js"></script> <!-- build:js({.tmp,app}) scripts/scripts.js --> <script src="scripts/app.js"></script> <script src="scripts/controllers/site/about.js"></script> <script src="scripts/controllers/common/filter.js"></script> <script src="scripts/controllers/common/main-content.js"></script> <script src="scripts/controllers/common/header.js"></script> <script src="scripts/controllers/menu/menu-panel.js"></script> <script src="scripts/controllers/menu/settings.js"></script> <script src="scripts/controllers/dashboard/dashboard.js"></script> <script src="scripts/controllers/common/selection-screen.js"></script> <script src="scripts/services/user-selection-data.js"></script> <script src="scripts/services/business/roommate.js"></script> <script src="scripts/services/business/room.js"></script> <script src="scripts/services/business/apartment.js"></script> <script src="scripts/controllers/post/post.js"></script> <script src="scripts/services/business/backend-data-service.js"></script> <script src="scripts/filters/business-list-filter.js"></script> <script src="scripts/services/common/dictionary.js"></script> <script src="scripts/directives/rental-display.js"></script> <!-- endbuild --> <!-- Cordova inclusion --> <script src="cordova.js"></script>  
 
 <!-- Begin Templates -->
 <script type="text/ng-template" id="/views/common/filter.html">
-<div class="filter"></div>
+<div class="filter"> <label class="inline">Search zipcode</label> <input type="number" class="form-input block" ng-model="filter.zip" placeholder="eg: 12345, etc"> </div>
 </script>
 
 <script type="text/ng-template" id="/views/common/header.html">
@@ -32,31 +32,35 @@
 </script>
 
 <script type="text/ng-template" id="/views/common/main-content.html">
-<div class="main-content"> <header ui-view="Header"></header> <div ui-view="Content"> content goes here </div> <footer ui-view="Footer"></footer> </div> <div class="click-blocker" ng-click="drawerParams.close()"></div>
+<div class="main-content"> <header ui-view="Header"></header> <div ui-view="Content" class="scroll-if-max"> content goes here </div> <footer ui-view="Footer"></footer> </div> <div class="click-blocker" ng-click="drawerParams.close()"></div>
 </script>
 
 <script type="text/ng-template" id="/views/common/selection-screen.html">
-<div class="selection-screen"> <div class="app-label"> Roommate World </div> <div class="selection-group"> <div class="button-default" ng-click="go('roommates')"> <span> Looking for Roommates </span> </div> <div class="button-default" ng-click="go('rooms')"> <span> Looking for Rooms </span> </div> <div class="button-default" ng-click="go('apartments')"> <span> Looking for Apartments </span> </div> <div class="optional" ng-click="defaultSelected=!defaultSelected"> <i class="selection-checkbox fa fa-check-circle-o fa-fw" ng-class="{'fa-check-circle-o': defaultSelected,'fa-circle-o':!defaultSelected}"></i> Set as default selection </div> <div class="split-line"></div> <div class="button-default" ng-click="$state.go('post')"> <span> Post an Ad </span> </div> </div> </div>
+<div class="selection-screen"> <div class="app-label"> Roommate World </div> <div class="selection-group"> <div class="button-default" ng-click="go('roommates')"> <span> Looking for Roommates </span> </div> <div class="button-default" ng-click="go('rooms')"> <span> Looking for Rooms </span> </div> <div class="button-default" ng-click="go('apartments')"> <span> Looking for Apartments </span> </div> <div class="optional" ng-click="defaultSelected=!defaultSelected"> <i class="selection-checkbox fa fa-check-circle-o fa-fw" ng-class="{'fa-check-circle-o': defaultSelected,'fa-circle-o':!defaultSelected}"></i> Set as default selection </div> <div class="split-line"></div> <div class="button-default" ng-click="$state.go('start.main.post')"> <span> Post an Ad </span> </div> </div> </div>
 </script>
 
 <script type="text/ng-template" id="/views/dashboard/dashboard.html">
-<div class="dashboard"> <table class="table"> <tr ng-repeat="roommate in roommateData"> <td>{{roommate}} - {{$id}} <td ng-click="remove('{{roommate.$id}}')">Remove  </table> <ul> <li class="rental-list" ng-repeat="stay in filtered = (displayData | listFilter:selected)"> {{stay[selected]}} </li> </ul> </div>
+<div class="dashboard"> <div class="filter-button" ng-click="slideOutMenuParams.open()"> Filter </div> <ul> <li class="rental-list" ng-click="true" ng-repeat="stay in filtered = (displayData | listFilter:selected)"> <rental-display display="stay[selected]"></rental-display> </li> </ul> </div>
 </script>
 
 <script type="text/ng-template" id="/views/dashboard/results-roommates.html">
 <p>This is the dashboard/results-roommates view.</p>
 </script>
 
+<script type="text/ng-template" id="/views/directives/rental-display.html">
+<div class="rental-display"> <div class="rental-description"> {{rentalItem.description}} </div> <span class="rent"> {{rentalItem.rent | currency}} </span> </div>
+</script>
+
 <script type="text/ng-template" id="/views/menu/menu-panel.html">
-<div class="menu-panel"> <ul> <li class="menu-option" ng-click="$state.go('start.main.dashboard') && drawerParams.close()"> Dashboard </li> <li class="menu-option"> Settings </li> <li class="menu-option" ng-click="$state.go('load') && drawerParams.close()"> Change Selection </li> <li class="menu-option" ng-click="$state.go('post') && drawerParams.close()"> Post an Ad </li> </ul> </div>
+<div class="menu-panel"> <ul> <li class="menu-option" ng-click="$state.go('start.main.dashboard') && drawerParams.close()"> Dashboard </li> <li class="menu-option" ng-click="$state.go('start.main.post') && drawerParams.close()"> Post an Ad </li> <li class="menu-option" ng-click="$state.go('load') && drawerParams.close()"> Change Selection </li> <li class="menu-option" ng-click="$state.go('start.main.settings') && drawerParams.close()"> Settings </li> </ul> </div>
 </script>
 
 <script type="text/ng-template" id="/views/menu/settings.html">
-<p>This is the menu/settings view.</p>
+<div class="settings"> <ul class="decentList"> <li class="decentItem" ng-click="true"> Register via phone number </li> <li class="decentItem" ng-click="true"> Register via email </li> </ul> </div>
 </script>
 
 <script type="text/ng-template" id="/views/post/post.html">
-<div class="post"> <div class="post-block"> <label>zipcode</label> <input class="block form-input" ng-model="postData.zipcode" type="number"> </div> <div class="post-block"> <label>Posting for</label> <div class="option-box"> <span class="option" ng-class="{'selected': selected === option}" ng-click="select(option)" ng-repeat="option in options"> {{option}} </span> </div> </div> <div class="post-block"> <div ng-switch="selected"> <div ng-switch-when="rooms"> <label>Looking for rent around</label> </div> <div ng-switch-when="roommates"> <label>Rent the room for</label> </div> <div ng-switch-when="apartments"> <label>Rent</label> </div> <input class="form-input block" ng-model="postData.rent" type="number"> </div> </div> <div class="post-block"> <div ng-click="post()" class="button-default block"> Post </div> </div> </div>
+<div class="post"> <div class="post-block"> <label>zipcode</label> <input class="block form-input" placeholder="12345" ng-model="postData.zipcode" type="number"> </div> <div class="post-block"> <label>Posting for</label> <div class="option-box"> <span class="option" ng-class="{'selected': selected === option}" ng-click="select(option)" ng-repeat="option in options"> {{option}} </span> </div> </div> <div class="post-block" ng-switch="selected"> <label ng-switch-when="rooms">{{dictionary.post.room.label}}</label> <label ng-switch-when="roommates">{{dictionary.post.roommate.label}}</label> <label ng-switch-when="apartments">{{dictionary.post.apartment.label}}</label> <input class="form-input block" placeholder="rental amount $0.00" ng-model="postData.rent" type="number"> </div> <div class="post-block"> <label>Short description</label> <input class="block form-input" placeholder="Describe in few words" maxlength="100" ng-model="postData.description" type="text"> </div> <div ng-if="apiCallBack.showButton" class="post-block"> <div ng-click="post()" class="button-default block"> Post </div> </div> <div ng-if="apiCallBack.message" class="message" ng-class="{'success':apiCallBack.success,'fail':!apiCallBack.success}"> {{apiCallBack.message}} </div> </div>
 </script>
 
 <script type="text/ng-template" id="/views/site/about.html">
