@@ -20,7 +20,7 @@
 
 <!-- Begin Templates -->
 <script type="text/ng-template" id="/views/common/filter.html">
-<div class="filter"> <label class="inline">Search zipcode</label> <input type="number" class="form-input block" ng-model="filter.zip" placeholder="eg: 12345, etc"> </div>
+<div class="filter" ui-keypress="{'enter': 'doFilter($event) && slideOutMenuParams.close()'}"> <label class="inline">Search zipcode</label> <input type="number" class="form-input block" ng-model="filter" placeholder="eg: 12345, etc"> <div class="form-input block" ng-click="doFilter() && slideOutMenuParams.close()"> Filter </div> </div>
 </script>
 
 <script type="text/ng-template" id="/views/common/header.html">
@@ -40,7 +40,7 @@
 </script>
 
 <script type="text/ng-template" id="/views/dashboard/dashboard.html">
-<div class="dashboard"> <div class="filter-button" ng-click="slideOutMenuParams.open()"> Filter </div> <ul> <li class="rental-list" ng-click="true" ng-repeat="stay in filtered = (displayData | listFilter:selected)"> <rental-display display="stay[selected]"></rental-display> </li> </ul> </div>
+<div class="dashboard" ng-tell="dashboard"> <div class="filter-button"> <span ng-if="!filterData" ng-click="slideOutMenuParams.open()">Filter</span> <span ng-if="filterData"> ({{filterData}}) <span class="link" ng-click="slideOutMenuParams.open()">Modify</span> <span class="link" ng-click="clearFilter()">Clear</span> </span> </div> <ul> <li class="rental-list" ng-click="true" ng-repeat="stay in (filtered = (displayData | listFilter:selected)) | filter:filterData"> <rental-display display="stay[selected]"></rental-display> </li> </ul> </div>
 </script>
 
 <script type="text/ng-template" id="/views/dashboard/results-roommates.html">
@@ -48,7 +48,7 @@
 </script>
 
 <script type="text/ng-template" id="/views/directives/rental-display.html">
-<div class="rental-display"> <div class="rental-description"> {{rentalItem.description}} </div> <span class="rent"> {{rentalItem.rent | currency}} </span> </div>
+<div class="rental-display"> <div class="rental-description"> {{rentalItem.description}} - {{rentalItem.zipcode}} </div> <span class="rent"> {{rentalItem.rent | currency}} </span> </div>
 </script>
 
 <script type="text/ng-template" id="/views/menu/menu-panel.html">
@@ -60,7 +60,7 @@
 </script>
 
 <script type="text/ng-template" id="/views/post/post.html">
-<div class="post"> <div class="post-block"> <label>zipcode</label> <input class="block form-input" placeholder="12345" ng-model="postData.zipcode" type="number"> </div> <div class="post-block"> <label>Posting for</label> <div class="option-box"> <span class="option" ng-class="{'selected': selected === option}" ng-click="select(option)" ng-repeat="option in options"> {{option}} </span> </div> </div> <div class="post-block" ng-switch="selected"> <label ng-switch-when="rooms">{{dictionary.post.room.label}}</label> <label ng-switch-when="roommates">{{dictionary.post.roommate.label}}</label> <label ng-switch-when="apartments">{{dictionary.post.apartment.label}}</label> <input class="form-input block" placeholder="rental amount $0.00" ng-model="postData.rent" type="number"> </div> <div class="post-block"> <label>Short description</label> <input class="block form-input" placeholder="Describe in few words" maxlength="100" ng-model="postData.description" type="text"> </div> <div ng-if="apiCallBack.showButton" class="post-block"> <div ng-click="post()" class="button-default block"> Post </div> </div> <div ng-if="apiCallBack.message" class="message" ng-class="{'success':apiCallBack.success,'fail':!apiCallBack.success}"> {{apiCallBack.message}} </div> </div>
+<div class="post" ui-keypress="{'enter': 'post($event)'}"> <div class="post-block"> <label>zipcode</label> <input class="block form-input" placeholder="12345" ng-model="postData.zipcode" type="number"> </div> <div class="post-block"> <label>Posting for</label> <div class="option-box"> <span class="option" ng-class="{'selected': selected === option}" ng-click="select(option)" ng-repeat="option in options"> {{option}} </span> </div> </div> <div class="post-block" ng-switch="selected"> <label ng-switch-when="rooms">{{dictionary.post.room.label}}</label> <label ng-switch-when="roommates">{{dictionary.post.roommate.label}}</label> <label ng-switch-when="apartments">{{dictionary.post.apartment.label}}</label> <input class="form-input block" placeholder="rental amount $0.00" ng-model="postData.rent" type="number"> </div> <div class="post-block"> <label>Short description</label> <input class="block form-input" placeholder="Describe in few words" maxlength="100" ng-model="postData.description" type="text"> </div> <div ng-if="apiCallBack.showButton" class="post-block"> <div ng-click="post()" class="button-default block"> Post </div> </div> <div ng-if="apiCallBack.message" class="message" ng-class="{'success':apiCallBack.success,'fail':!apiCallBack.success}"> {{apiCallBack.message}} </div> </div>
 </script>
 
 <script type="text/ng-template" id="/views/site/about.html">
